@@ -138,12 +138,13 @@ def rollback_release():
             detail="No active release to rollback"
         )
 
-    # Find previous release
+    # Find previous release (never one that was itself rolled back)
     previous_release = connection.execute(
         """
         SELECT *
         FROM releases
         WHERE id < ?
+        AND status != 'ROLLED_BACK'
         ORDER BY id DESC
         LIMIT 1
         """,
